@@ -36,7 +36,7 @@ extern "C" int scanhash_mtp(int nthreads,int thr_id, struct work* work, uint32_t
 {
 
 	unsigned char mtpHashValue[32];
-
+	struct timeval tv_start, tv_end, delta;
 
 if (JobId==0)
 	pthread_barrier_init(&barrier, NULL, nthreads);
@@ -136,7 +136,7 @@ printf("memory filled \n");
 pthread_mutex_unlock(&work_lock);
 
 if (fillGpu[thr_id]) {
-
+	gettimeofday(&tv_start, NULL);
 printf("filling memory\n");
 const int datachunk = 512;
 for (int i = 0; i<((uint32_t)memcost / datachunk) /* && !work_restart[thr_id].restart*/; i++) {
@@ -149,14 +149,16 @@ for (int i = 0; i<((uint32_t)memcost / datachunk) /* && !work_restart[thr_id].re
 
 	free(Truc);
 }
-printf("memory filled \n");
+gettimeofday(&tv_end, NULL);
+timeval_subtract(&delta, &tv_end, &tv_start);
+printf("memory filled gpu %d time take %.2f\n",thr_id, (1000.0 * delta.tv_sec) + (0.001 * delta.tv_usec));
 fillGpu[thr_id]=false;
 }
 
 
 	if (work_restart[thr_id].restart) goto TheEnd;
 		pdata[19] = first_nonce;
-do  {
+//do  {
 //		printf("work->data[17]=%08x\n", work->data[17]);
 		uint32_t foundNonce;
 
@@ -215,8 +217,8 @@ do  {
 		}
 */
 		pdata[19] += throughput;
-
-	}   while (!work_restart[thr_id].restart && pdata[19]<real_maxnonce && JobId==work->data[17] /*&& pdata[19]<(first_nonce+128*throughput)*/);
+//printf("thread %d JobId %08x %08x \n",thr_id,JobId, work->data[17]);
+//	}   while (!work_restart[thr_id].restart && pdata[19]<real_maxnonce && JobId==work->data[17] /*&& pdata[19]<(first_nonce+128*throughput)*/);
 
 TheEnd:
 
