@@ -200,6 +200,7 @@ if (JobId[thr_id] != work->data[17] || XtraNonce2[thr_id] != ((uint64_t*)work->x
 //	printf("after argon4\n");
 	//	mtp_setBlockTarget(0,endiandata,ptarget,&TheMerkleRoot);
 	mtp_setBlockTarget(thr_id, endiandata, ptarget, &TheMerkleRoot[thr_id]);
+	printf("waiting...\n");
 	sleep(1);
 //	free(x);
 //	gpulog(LOG_WARNING, thr_id, "memory filled %d chunks", MEM[thr_id].size());
