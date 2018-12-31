@@ -208,6 +208,7 @@ if (JobId[thr_id] != work->data[17] || XtraNonce2[thr_id] != ((uint64_t*)work->x
 
 
 /*
+sleep(1);
 if (fillGpu[thr_id]) {
 
 printf("filling memory\n");
